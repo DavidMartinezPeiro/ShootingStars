@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 
 @SpringBootApplication
 @RestController
@@ -24,12 +27,12 @@ public class ShootingstarsApplication {
     }
 
     @GetMapping("/weather")
-    public CityWeather cityWeather(@RequestParam(value = "city", defaultValue = "Barcelona") String city
-            /*,@RequestParam(value = "date", defaultValue = "") String date*/) throws Exception {
-        //String finalDate = date.isEmpty() ? LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : date;
+    public CityWeather cityWeather(@RequestParam(value = "city", defaultValue = "Barcelona") String city,
+            @RequestParam(value = "date", defaultValue = "") String date) throws Exception {
+        String finalDate = date.isEmpty() ? LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : date;
         WeatherResponse wr = getWeatherFromCity(city);
         boolean isVisible = wr.current().cloud() == 0;
-        return new CityWeather(/*finalDate,*/ city, isVisible, wr.current().cloud());
+        return new CityWeather(finalDate, city, isVisible, wr.current().cloud());
 
     }
 
