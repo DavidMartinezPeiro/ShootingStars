@@ -24,23 +24,16 @@ public class ShootingstarsApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ShootingstarsApplication.class, args);
+
     }
 
     @GetMapping("/weather")
-    public CityWeather cityWeather(@RequestParam(value = "city", defaultValue = "Barcelona") String city,
-            @RequestParam(value = "date", defaultValue = "") String date) throws Exception {
+    public CityWeather cityWeatherProvider(@RequestParam(value = "city", defaultValue = "Barcelona") String city,
+                                           @RequestParam(value = "date", defaultValue = "") String date) {
+        CityWeatherAPI cityWeatherAPI = new WeatherAPI(new RestTemplate(), apiKey, locale);
         String finalDate = date.isEmpty() ? LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : date;
-        WeatherResponse wr = getWeatherFromCity(city);
-        boolean isVisible = wr.current().cloud() == 0;
-        return new CityWeather(finalDate, city, isVisible, wr.current().cloud());
-
+        WeatherResponse weatherResponse = cityWeatherAPI.getWeatherFromCity(city);
+        boolean isVisible = weatherResponse.current().cloud() == 0;
+        return new CityWeather(finalDate, city, isVisible, weatherResponse.current().cloud());
     }
-
-    public WeatherResponse getWeatherFromCity(String city) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-        String uri = "https://api.weatherapi.com/v1/current.json?key=" + apiKey + "&q=" + city + "&lang=" + locale;
-        return restTemplate.getForObject(uri, WeatherResponse.class);
-    }
-
-
 }
