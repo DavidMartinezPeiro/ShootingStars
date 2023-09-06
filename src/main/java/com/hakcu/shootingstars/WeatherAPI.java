@@ -1,7 +1,6 @@
 package com.hakcu.shootingstars;
 
 import com.hakcu.shootingstars.records.WeatherResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 
 public class WeatherAPI implements CityWeatherAPI {
